@@ -14,12 +14,13 @@ st.set_page_config(page_title="Multi-Brand Lead Portal", page_icon="⚡", layout
 # ==========================================
 # BENTO GRID UI/UX CSS INJECTION 
 # ==========================================
+# ==========================================
+# BENTO GRID UI/UX CSS INJECTION 
+# ==========================================
 st.markdown("""
     <style>
     /* Global Workspace Background */
     .stApp { background-color: #F4F7FE; font-family: 'Inter', sans-serif; color: #0F172A; }
-    
-    /* Ensure all main area headings are visible and dark */
     .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6 { color: #0F172A !important; font-weight: 800; letter-spacing: -0.5px; }
     
     /* Dark Modern Sidebar */
@@ -27,27 +28,47 @@ st.markdown("""
     [data-testid="stSidebar"] * { color: rgba(255, 255, 255, 0.85) !important; }
     [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 { color: #FFFFFF !important; }
     
-    /* Hide Default Headers */
-    header {visibility: hidden;} footer {visibility: hidden;}
+    /* 🚨 THE FIX: Visible Sidebar Toggle & Transparent Header */
+    header { background-color: transparent !important; }
+    [data-testid="collapsedControl"] {
+        background-color: #FFFFFF !important; 
+        border-radius: 50% !important; 
+        box-shadow: 0px 4px 15px rgba(0,0,0,0.1) !important;
+    }
+    [data-testid="collapsedControl"] svg { color: #0F172A !important; fill: #0F172A !important; }
+    footer {visibility: hidden;}
     
-    /* ========================================= */
-    /* BENTO CARD DESIGNS                        */
-    /* ========================================= */
-    
+    /* Bento Card Designs */
     .bento-card {
-        background: #FFFFFF; 
-        border-radius: 24px; 
-        padding: 2rem; 
-        text-align: center;
+        background: #FFFFFF; border-radius: 24px; padding: 2rem; text-align: center;
         box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.04); 
         transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
-        border: 1px solid #E2E8F0; 
-        cursor: pointer; 
-        margin-bottom: 1.5rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        height: 100%;
+        border: 1px solid #E2E8F0; margin-bottom: 1.5rem; display: flex; flex-direction: column; justify-content: center; height: 100%;
+    }
+    .bento-card:hover { transform: translateY(-5px); box-shadow: 0px 15px 35px rgba(54, 153, 255, 0.1); border-color: #3699FF; }
+    .brand-title { font-size: 1.8rem; font-weight: 800; color: #0F172A !important; margin-top: 1rem; margin-bottom: 0.3rem; }
+    
+    /* Login Container (Bento Style) */
+    .login-container { max-width: 420px; margin: 3rem auto; padding: 3rem 2.5rem; background: #FFFFFF; border-radius: 24px; box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.06); border: 1px solid #E2E8F0; }
+    
+    /* Primary Pill Buttons */
+    .stButton>button {
+        background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+        color: white !important; border-radius: 50px; font-weight: 700; border: none; padding: 0.6rem 2rem; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3); transition: all 0.3s ease;
+    }
+    .stButton>button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4); }
+    
+    /* Outline Buttons */
+    .btn-outline>button { background: transparent !important; color: #0F172A !important; border: 2px solid #E2E8F0 !important; box-shadow: none !important; border-radius: 50px; }
+    .btn-outline>button:hover { background: #F1F5F9 !important; border-color: #CBD5E1 !important; }
+    
+    /* Bento Metric Blocks */
+    .metric-bento { background: #FFFFFF; padding: 1.8rem; border-radius: 24px; box-shadow: 0px 4px 20px rgba(0,0,0,0.03); border: 1px solid #E2E8F0; margin-bottom: 1.5rem; text-align: left; }
+    .metric-icon { font-size: 2.2rem; margin-bottom: 12px; }
+    .metric-bento h3 { color: #64748B !important; font-size: 0.85rem; margin-bottom: 0.2rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;}
+    .metric-bento h2 { color: #0F172A !important; font-size: 2.8rem; font-weight: 800; margin: 0; line-height: 1;}
+    </style>
+""", unsafe_allow_html=True)
     }
     .bento-card:hover { 
         transform: translateY(-5px); 
