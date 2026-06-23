@@ -10,13 +10,6 @@ from datetime import datetime
 # PAGE CONFIGURATION (Must be first)
 # ==========================================
 st.set_page_config(page_title="Multi-Brand Lead Portal", page_icon="⚡", layout="wide", initial_sidebar_state="expanded")
-
-# ==========================================
-# BENTO GRID UI/UX CSS INJECTION 
-# ==========================================
-# ==========================================
-# BENTO GRID UI/UX CSS INJECTION 
-# ==========================================
 st.markdown("""
     <style>
     /* Global Workspace Background */
@@ -68,7 +61,7 @@ st.markdown("""
     .metric-bento h3 { color: #64748B !important; font-size: 0.85rem; margin-bottom: 0.2rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;}
     .metric-bento h2 { color: #0F172A !important; font-size: 2.8rem; font-weight: 800; margin: 0; line-height: 1;}
     </style>
-""", unsafe_allow_html=True)
+, unsafe_allow_html=True)
     }
     .bento-card:hover { 
         transform: translateY(-5px); 
