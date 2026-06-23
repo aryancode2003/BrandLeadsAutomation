@@ -115,10 +115,10 @@ LOG_FILE = "usage_logs.csv"
 
 # SET YOUR PASSWORDS HERE
 USER_DATABASE = {
-    "anshul@company.com": {"password": "admin", "role": "superadmin", "brand": "ALL"},
-    "fatafat@brand.com": {"password": "123", "role": "user", "brand": "FATAFAT"},
-    "jugnoo@brand.com": {"password": "123", "role": "user", "brand": "JUGNOO"},
-    "solo@brand.com": {"password": "123", "role": "user", "brand": "SOLO BEAUTY"}
+    "admin@jungleworks.com": {"password": "admin", "role": "superadmin", "brand": "ALL"},
+    "aryan.srivastava@jungleworks.com": {"password": "Aryan@123", "role": "user", "brand": "FATAFAT"},
+    "anshul.mehra@jungleworks.com": {"password": "Jugnoo123", "role": "user", "brand": "JUGNOO"},
+    "riya.arora@jungleworks.com": {"password": "Solobeauty123", "role": "user", "brand": "SOLO BEAUTY"}
 }
 
 DEFAULT_BRANDS = {
