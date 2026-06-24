@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import io
 import os
-import time
 import json
 from datetime import datetime
 
@@ -44,10 +43,7 @@ st.markdown("""
     
     .login-container { max-width: 420px; margin: 3rem auto; padding: 3rem 2.5rem; background: #FFFFFF; border-radius: 24px; box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.06); border: 1px solid #E2E8F0; }
     
-    .stButton>button {
-        background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
-        color: white !important; border-radius: 50px; font-weight: 700; border: none; padding: 0.6rem 2rem; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3); transition: all 0.3s ease;
-    }
+    .stButton>button { background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); color: white !important; border-radius: 50px; font-weight: 700; border: none; padding: 0.6rem 2rem; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3); transition: all 0.3s ease; }
     .stButton>button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4); }
     
     .btn-outline>button { background: transparent !important; color: #0F172A !important; border: 2px solid #E2E8F0 !important; box-shadow: none !important; border-radius: 50px; }
@@ -70,26 +66,28 @@ LOG_FILE = "usage_logs.csv"
 BRAND_LOGOS = {
     "FATAFAT": "fatafat.png",
     "JUGNOO": "jugnoo.png",
-    "SOLO BEAUTY": "solo_beauty.png"
+    "SOLO BEAUTY": "solo_beauty.png",
+    "JINI": "jini.png"
 }
 
 USER_DATABASE = {
     "admin@jungleworks.com": {"password": "admin", "role": "superadmin", "brand": "ALL"},
     "aryan.srivastava@jungleworks.com": {"password": "Fatafat123", "role": "user", "brand": "FATAFAT"},
     "anshul.mehra@jungleworks.com": {"password": "Jugnoo123", "role": "user", "brand": "JUGNOO"},
-    "riya.arora@jungleworks.com": {"password": "Solobeauty123", "role": "user", "brand": "SOLO BEAUTY"}
+    "riya.arora@jungleworks.com": {"password": "Solobeauty123", "role": "user", "brand": "SOLO BEAUTY"},
+    "palak.thakur@jungleworks.com": {"password": "Jini123", "role": "user", "brand": "JINI"}
 }
 
 DEFAULT_BRANDS = {
     "FATAFAT": { "name": "FATAFAT", "lost_cities": ["Adipur", "Agartala", "Ahmedabad", "Akola", "Aligarh", "Alipurduar", "Alwar", "Ambejogai", "Amravati", "Amritsar", "Asansol", "Ashoka Nagar", "Ashta", "Azamgarh", "Baddi", "Bahraich", "Balasore", "Ballari", "Banka", "Bardhaman", "Baripada", "Basti", "Bazpur", "Beawar", "Betul", "Bhaderwah", "Bhagalpur", "Bhandara", "Bhiwani", "Bilaspur", "Bishanpura", "Brahmapur", "Burhar", "Chamba", "Chanchal", "Chunar", "Coimbatore", "Contai", "Cuttack", "Daltonganj", "Darbhanga", "Dewas", "Dharamshala", "Dharmanagar", "Dimapur", "Dinhata", "Doda", "Dumka", "Durgapur", "Erode", "Faridabad", "Faridkot", "Farrukhabad", "Fatehgarh", "Firozabad", "Ganderbal", "Gandhidham", "Gondia", "Gora Bazar", "Guntur", "Gurugram", "Guruvayur", "Gwalior", "Hailakandi", "Hamirpur", "Haridwar", "Hazaribagh", "Hyderabad", "Imphal", "Islampur", "Jagadhri", "Jaisalmer", "Jalandhar", "Jammu", "Jamshedpur", "Jangipur", "Jhunjhunu", "Jodhpur", "Jorhat", "Kadapa", "Kakinada", "Kalyan", "Kangra", "Karimnagar", "Karnal", "Kathua", "Keonjhar", "KGF", "Khordha", "Kishanganj", "Kishangarh", "Kot Kapura", "Kumarghat", "Kunda", "Kurukshetra", "Lakhimpur Kheri", "Latur", "Ludhiana", "Madurai", "Mahendragarh", "Maheshwarpur", "Mahoba", "Malda", "Manali", "Manawar", "Manipal", "Mau", "Meerut", "Midnapore", "Mohali", "Moradabad", "Motihari", "Nagpur", "Navi Mumbai", "Nimbahera", "Noida", "Nuh", "Orai", "Outer Ahmedabad", "Outer Patna", "Pali", "Panipat", "Paonta Sahib", "Pathankot", "Patna", "Perinthalmanna", "Phalodi", "Port Blair", "Prakasam", "Prayagraj", "Puducherry", "Pune", "Puri", "Rampur", "Rampurhat", "Ranchi", "Rawatbhata", "Reasi", "Robertsganj", "Rohini", "Rohru", "Roorkee", "Sangareddy", "Sangli", "Saraipali", "Sasaram", "Shahdol", "Shahjahanpur", "Shamli", "Shimla", "Shivpuri", "Shujalpur", "Silchar", "Siliguri", "Singhana", "Singur", "Sirohi", "Sirsa", "Solan", "Solapur", "Sonipat District", "Srinagar", "Sundernagar", "Suri", "Tarn Taran", "Tezpur", "Thane", "Tinsukia", "Umarkhed", "Una", "Unnao", "Vadodara", "Waidhan", "Yamunanagar"] },
     "JUGNOO": { "name": "JUGNOO", "lost_cities": ["Vadodara", "Guwahati", "Jaipur", "Srinagar", "Nagercoil", "Bhopal", "Ludhiana", "Faridabad", "Chandigarh", "Mohali", "Sagar", "Rewa", "Dewas", "Kanniyakumari", "Mau", "Raipur", "Daman", "Vapi", "Nagpur", "Rajkot", "Bijnor", "Meerut", "Muzaffarnagar", "Coimbatore", "Deoghar", "Lucknow", "Kanpur", "Pune", "Gorakhpur", "Kalaburagi", "Barabanki", "Ratlam", "Kozhikode", "Betul", "Chhindwara", "Dharmanagar", "Thucklay", "Padmanabhapuram", "Marthandam", "Derabassi", "Durgapur", "Kharar", "Pinjore", "Koraput", "Navi Mumbai", "Kollam", "Sumerpur", "Nagaon", "Balaghat", "Rudrapur", "Una", "Baddi", "Shimla", "Thrissur", "Cooch Bihar", "Imphal", "Dharamshala", "Manali", "Gondia", "Ernakulam", "Kodagu", "Dindigul", "Patiala", "Barwani", "Dhar", "Dhanbad", "Chapra", "Waidan", "Bidar", "Kamareddy", "Nanded", "Pathankot", "Hajipur", "Goalpara", "Balasore", "Puri", "Karimnagar", "Hassan", "Ahmedabad", "Baripada", "Kannur", "Shamli", "Mirzapur", "Jaunpur", "Bhadohi", "Tuticorin", "Ramanathapuram", "Thoubal", "Karimganj", "Doddaballapura", "Nandi Hills", "Godda", "Delhi", "New Delhi", "Gurgaon", "Gurugram", "Noida", "Greater Noida", "Baleswar", "Belgaum", "Calicut", "Midnapore", "Daltonganj", "Barotiwala", "Nalagarh", "Hyderabad", "Bangalore", "Chennai", "Kolkata", "Bengaluru", "Mumbai", "Shahdol", "Kottayam", "Dehri-on-Sone", "Ghaziabad", "Kamrup", "Madanapalle", "Aizawl", "Udaipur", "Narmadapuram", "Bathinda", "Jalgaon", "Waidhan", "Biswanath", "Bandikui", "Ganjam", "Bareilly", "Dhemaji", "Bahraich", "Bhuj", "Gandhidham", "Kutch", "Dhubri", "Kohima", "Nalanda", "Dinhata", "Beawar", "Sitamarhi", "Alipurduar", "Hazaribagh", "Barbil", "Ballia", "Joda", "Bhubaneswar", "Bhadrak", "Palamu", "Mathura", "Vrindavan", "Basti", "Saharsa", "Tarn Taran", "Madurai", "Orai", "Rajouri", "Begusarai", "Kushinagar", "Khatu Shyam", "Dombivli", "Gwalior", "Satara", "Sundar Nagar", "Singrauli", "Surat", "Vikasnagar", "Dimapur", "Rapar", "Katihar", "Vijayapura", "Ajmer", "Gir Somnath", "Moga", "Jharsuguda", "Dwarka", "Madhubani", "Jaisalmer", "Gulbarga", "Huancayo", "Bharuch", "Khanna", "Morbi", "Indore", "Ankleshwar", "Bankura", "Purulia", "Murshidabad", "Haridwar", "Raiganj", "Dalkhola", "Asansol", "Sri Muktsar Sahib", "Bhavnagar", "Malerkotla", "Sangrur", "Barnala", "Raichur", "Palghar", "Vasai", "Dungarpur", "Champawat", "Khatima", "Malviya Nagar", "Arambagh", "Harda", "Gandhinagar", "Hosur", "Naharlagun", "Kishtwar", "Doda", "Ambikapur", "Dar es Salaam", "Ziro", "Malegaon", "Dhule", "Aurangabad", "Bikaner", "Roorkee", "Kharagpur", "Prakasam", "Udgir", "Hojai", "Jalore", "Bhinmal", "Gangapur", "Sonipat", "Addanki", "Saket", "New Town", "Jabalpur", "Kandukur", "Chimakurthi", "Tangutur", "Kothapatnam", "Ahore", "Sayla", "Lanka", "Itanagar", "Kolhapur", "Belagavi", "Jamshedpur", "Dausa", "Karauli", "Rishikesh", "Tirupati", "Secunderabad", "Jaleswar", "Purnia", "Sangli", "Junagadh", "Jhargram", "Godhra", "Bilaspur", "Medchal-Malkajgiri", "Kanyakumari", "Umaria", "Panipat", "Varanasi", "Ayodhya", "Haldia", "Khordha", "Bagodar"] },
-    "SOLO BEAUTY": { "name": "SOLO BEAUTY", "lost_cities": ["Hozabad", "Vapi", "Deoria", "Rajkot", "Ajmer", "Udham Singh Nagar", "Rudrapur", "Nagpur", "Bhopal", "Navi Mumbai", "Panipat", "Bhubaneswar", "Gwalior", "Jammu", "Ghaziabad", "Agra", "Jabalpur", "Mathura", "Jalandhar", "Noida", "Secunderabad", "Muzaffarpur", "Asansol", "Silchar", "Mandi", "Ayodhya", "Balasore", "Zirakpur", "Patna", "Etawah", "Kolkata", "South Kolkata", "East Kolkata", "Pune", "Vadodara", "Vijayawada", "Allahabad", "Muzaffarnagar", "Lucknow", "Varanasi", "Jodhpur", "Indore", "Udaipur", "Guntur", "Gorakhpur", "Kashipur", "Gurgaon", "Amritsar", "Hyderabad", "Jaipur", "Kanpur", "Bhagalpur", "Sonipat", "Ahmedabad", "Orai", "Bharatpur", "Firozabad"] }
+    "SOLO BEAUTY": { "name": "SOLO BEAUTY", "lost_cities": ["Hozabad", "Vapi", "Deoria", "Rajkot", "Ajmer", "Udham Singh Nagar", "Rudrapur", "Nagpur", "Bhopal", "Navi Mumbai", "Panipat", "Bhubaneswar", "Gwalior", "Jammu", "Ghaziabad", "Agra", "Jabalpur", "Mathura", "Jalandhar", "Noida", "Secunderabad", "Muzaffarpur", "Asansol", "Silchar", "Mandi", "Ayodhya", "Balasore", "Zirakpur", "Patna", "Etawah", "Kolkata", "South Kolkata", "East Kolkata", "Pune", "Vadodara", "Vijayawada", "Allahabad", "Muzaffarnagar", "Lucknow", "Varanasi", "Jodhpur", "Indore", "Udaipur", "Guntur", "Gorakhpur", "Kashipur", "Gurgaon", "Amritsar", "Hyderabad", "Jaipur", "Kanpur", "Bhagalpur", "Sonipat", "Ahmedabad", "Orai", "Bharatpur", "Firozabad"] },
+    "JINI": { "name": "JINI", "lost_cities": ["Vadodara", "Durgapur", "Balasore", "South Delhi", "Guwahati"] }
 }
 
 if not os.path.exists(CONFIG_FILE):
     with open(CONFIG_FILE, "w") as f: json.dump(DEFAULT_BRANDS, f, indent=4)
 
-# UPGRADED DATABASE WITH STAGE TRACKING
 if not os.path.exists(LOG_FILE):
     pd.DataFrame(columns=["Timestamp", "User_Email", "Brand", "Action", "Total_Leads", "Fresh_Leads", "Delivery_Leads", "Lost_Leads", "File_Name"]).to_csv(LOG_FILE, index=False)
 
@@ -140,7 +138,6 @@ if st.session_state.step == "brand_selection":
             except: pass
             
             st.markdown(f"<div class='brand-title'>{brand}</div><span style='color:#64748B; font-weight: 500;'>Lead Engine</span><br><br>", unsafe_allow_html=True)
-            
             if st.button(f"Enter {brand}", key=f"btn_{brand}", use_container_width=True):
                 st.session_state.selected_brand = brand
                 st.session_state.step = "login"
@@ -184,7 +181,7 @@ elif st.session_state.step == "login":
 # ==========================================
 elif st.session_state.step == "main_portal":
     active_brand = st.session_state.selected_brand
-    brand_data = brand_configs.get(active_brand, DEFAULT_BRANDS["FATAFAT"])
+    brand_data = brand_configs.get(active_brand, DEFAULT_BRANDS.get(active_brand, DEFAULT_BRANDS["FATAFAT"]))
 
     with st.sidebar:
         logo_path = BRAND_LOGOS.get(active_brand, "")
@@ -243,8 +240,14 @@ elif st.session_state.step == "main_portal":
                     
                     df.columns = df.columns.str.lower().str.strip()
                     df_transformed = pd.DataFrame()
-                    df_transformed['City'] = df['city'] if 'city' in df.columns else ""
                     df_transformed['Country'] = 'India'
+                    df_transformed['City'] = df['city'] if 'city' in df.columns else ""
+                    
+                    # Deal Owner Email Distribution
+                    if active_brand == "SOLO BEAUTY": df_transformed['Deal Owner Email ID'] = 'riya.arora@jungleworks.com'
+                    elif active_brand == "JINI": df_transformed['Deal Owner Email ID'] = 'palak.thakur@jungleworks.com'
+                    else: df_transformed['Deal Owner Email ID'] = 'anshul.mehra@jungleworks.com'
+                    
                     df_transformed['Contact Name'] = df['full_name'] if 'full_name' in df.columns else ""
                     df_transformed['Contact Email'] = df['email'] if 'email' in df.columns else ""
                     
@@ -254,11 +257,12 @@ elif st.session_state.step == "main_portal":
                         df_transformed['Contact Phone Number'] = df['phone'].astype(str).str.replace(r'\D', '', regex=True).apply(lambda x: f"{x}" if pd.notnull(x) else "")
                     else: df_transformed['Contact Phone Number'] = ""
                     
-                    df_transformed['Deal Owner Email ID'] = 'anshul.mehra@jungleworks.com'
-                    df_transformed['Pipeline'] = active_brand 
+                    pipeline_map = {"FATAFAT": "FATAFAT", "JUGNOO": "JUGNOO", "SOLO BEAUTY": "Solo Beauty", "JINI": "Jini Franchise"}
+                    df_transformed['Pipeline'] = pipeline_map.get(active_brand, active_brand)
                     df_transformed['Tags'] = 'Brands-Franchise'
                     df_transformed['Deal Status'] = 'Open'
 
+                    # LOGIC BRANCHING
                     if active_brand == "FATAFAT":
                         def determine_utm_fatafat(row):
                             val = str(row.iloc[12]).lower() + " " + str(row.iloc[13]).lower() if len(row) > 13 else ""
@@ -285,7 +289,18 @@ elif st.session_state.step == "main_portal":
                         if 'full_name' in df.columns: df_transformed['Note'] = 'Want to join ' + df_transformed['Utm Content'] + ' in ' + df['full_name'].astype(str)
                         df_transformed['Source'] = 'Facebook'
                         df_transformed['investment'] = df.iloc[:, 12].astype(str).str.lower().str.strip() if df.shape[1] > 12 else ""
+                        
+                    elif active_brand == "JINI":
+                        def determine_utm_jini(row):
+                            val_m = str(row.iloc[12]).lower() if len(row) > 12 else ""
+                            if 'no' in val_m or 'not' in val_m: return 'as_a_delivery_boy'
+                            return 'as_a_franchise_owner'
+                        df_transformed['Utm Content'] = df.apply(determine_utm_jini, axis=1)
+                        df_transformed['Note'] = 'Want to ' + df_transformed['Utm Content'] + ' in ' + df_transformed['City'].astype(str)
+                        df_transformed['Source'] = 'Facebook'
+                        df_transformed['investment'] = df.iloc[:, 13].astype(str).str.lower().str.strip() if df.shape[1] > 13 else ""
 
+                    # UNIVERSAL STAGE ENGINE
                     def determine_stage(row, lost_set, brand):
                         raw_city = str(row['City']).strip().lower()
                         if brand == "SOLO BEAUTY":
@@ -298,10 +313,12 @@ elif st.session_state.step == "main_portal":
                         
                     df_transformed['Stage'] = df_transformed.apply(lambda r: determine_stage(r, active_lost_set, active_brand), axis=1)
                     
-                    cols = ['Country', 'City', 'Contact Name', 'Contact Email', 'Contact Phone Number', 'Deal Owner Email ID', 'Pipeline', 'Stage', 'Tags', 'Deal Status', 'Note', 'Source', 'Utm Content', 'investment']
+                    cols = ['Country', 'City', 'investment', 'Contact Email', 'Contact Name', 'Contact Phone Number', 'Deal Owner Email ID', 'Pipeline', 'Stage', 'Tags', 'Deal Status', 'Note', 'Source', 'Utm Content']
+                    cols = [c for c in cols if c in df_transformed.columns]
                     df_transformed = df_transformed[cols]
                     
-                    if active_brand == "SOLO BEAUTY": df_transformed.rename(columns={'investment': 'Investment'}, inplace=True)
+                    if active_brand in ["SOLO BEAUTY", "JINI"]:
+                        df_transformed.rename(columns={'investment': 'Investment'}, inplace=True)
 
                 # CALCULATE FINAL METRICS
                 total_len = len(df_transformed)
@@ -323,14 +340,15 @@ elif st.session_state.step == "main_portal":
                 st.markdown("<br>", unsafe_allow_html=True)
                 st.dataframe(df_transformed, use_container_width=True, height=300)
                 
+                # CSV Generation
                 st.download_button(
-                    label=f"📥 Download {active_brand} Processed Leads",
+                    label=f"📥 Download {active_brand} Processed CSV",
                     data=df_transformed.to_csv(index=False, encoding='utf-8'),
                     file_name=f"{active_brand}_Leads_{datetime.now().strftime('%Y%m%d_%H%M')}.csv",
                     mime="text/csv",
                     use_container_width=True,
                     on_click=log_activity,
-                    args=(st.session_state.user_email, active_brand, "Processed CSV", total_len, fresh_len, delivery_len, lost_len, uploaded_file.name)
+                    args=(st.session_state.user_email, active_brand, "Processed Leads", total_len, fresh_len, delivery_len, lost_len, uploaded_file.name)
                 )
             except Exception as e:
                 st.error(f"Processing Error: Please verify this is a valid {active_brand} raw file. Details: {e}")
@@ -356,55 +374,41 @@ elif st.session_state.step == "main_portal":
             st.markdown("<h3 style='margin-bottom: 1rem;'>📈 Advanced Global Analytics</h3>", unsafe_allow_html=True)
             try:
                 logs_df = pd.read_csv(LOG_FILE)
-                # Filter only file processing actions for analytics math
-                analytics_df = logs_df[logs_df['Action'] == "Processed CSV"].copy()
+                analytics_df = logs_df[logs_df['Action'] == "Processed Leads"].copy()
                 
                 if not analytics_df.empty:
                     analytics_df['Timestamp'] = pd.to_datetime(analytics_df['Timestamp'])
                     analytics_df['Date'] = analytics_df['Timestamp'].dt.date
                     
-                    # Dashboard Filters
                     col_f1, col_f2 = st.columns(2)
-                    with col_f1:
-                        date_range = st.date_input("Filter by Date Range", 
-                                                   [analytics_df['Date'].min(), analytics_df['Date'].max()])
-                    with col_f2:
-                        brand_filter = st.selectbox("Filter by Brand", ["ALL"] + list(brand_configs.keys()))
+                    with col_f1: date_range = st.date_input("Filter by Date Range", [analytics_df['Date'].min(), analytics_df['Date'].max()])
+                    with col_f2: brand_filter = st.selectbox("Filter by Brand", ["ALL"] + list(brand_configs.keys()))
                         
-                    # Apply Filters
                     if len(date_range) == 2:
                         mask = (analytics_df['Date'] >= date_range[0]) & (analytics_df['Date'] <= date_range[1])
                         filtered_df = analytics_df.loc[mask]
-                    else:
-                        filtered_df = analytics_df
+                    else: filtered_df = analytics_df
                         
-                    if brand_filter != "ALL":
-                        filtered_df = filtered_df[filtered_df['Brand'] == brand_filter]
+                    if brand_filter != "ALL": filtered_df = filtered_df[filtered_df['Brand'] == brand_filter]
                         
-                    # Calculate Dashboard Aggregates
                     agg_total = filtered_df['Total_Leads'].sum()
                     agg_fresh = filtered_df['Fresh_Leads'].sum()
                     agg_delivery = filtered_df['Delivery_Leads'].sum()
                     agg_lost = filtered_df['Lost_Leads'].sum()
                     
                     st.markdown("<br>", unsafe_allow_html=True)
-                    
-                    # Display Aggregated Bento Metrics
                     a_col1, a_col2, a_col3, a_col4 = st.columns(4)
                     with a_col1: st.markdown(f"<div class='metric-bento'><div class='metric-icon'>🌍</div><h3>Total System Leads</h3><h2>{int(agg_total)}</h2></div>", unsafe_allow_html=True)
                     with a_col2: st.markdown(f"<div class='metric-bento'><div class='metric-icon'>🔥</div><h3>Total Fresh</h3><h2>{int(agg_fresh)}</h2></div>", unsafe_allow_html=True)
                     with a_col3: st.markdown(f"<div class='metric-bento'><div class='metric-icon'>🛵</div><h3>Total Driver/Merch</h3><h2>{int(agg_delivery)}</h2></div>", unsafe_allow_html=True)
                     with a_col4: st.markdown(f"<div class='metric-bento'><div class='metric-icon'>🗑️</div><h3>Total Lost</h3><h2>{int(agg_lost)}</h2></div>", unsafe_allow_html=True)
 
-                    # Dynamic Trend Chart
                     st.markdown("<h4 style='margin-top: 2rem;'>📊 Lead Generation Trend</h4>", unsafe_allow_html=True)
                     if not filtered_df.empty:
                         trend_df = filtered_df.groupby('Date')[['Total_Leads', 'Fresh_Leads', 'Delivery_Leads', 'Lost_Leads']].sum()
                         st.line_chart(trend_df, use_container_width=True)
-                    else:
-                        st.info("No data available for the selected filters.")
-                else:
-                    st.info("Upload and process some files to generate analytics data!")
+                    else: st.info("No data available for the selected filters.")
+                else: st.info("Upload and process some files to generate analytics data!")
                 
                 st.markdown("<hr><h4 style='margin-top: 2rem;'>📑 Raw System Audit Log</h4>", unsafe_allow_html=True)
                 st.dataframe(logs_df.sort_values(by="Timestamp", ascending=False).reset_index(drop=True), use_container_width=True)
